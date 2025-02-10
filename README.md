@@ -56,7 +56,9 @@ jangan lupa tulis commmit message yang bagus
 
 
 #### NOTE :
-Kalau buat script (.bat , .sh , dkk), jangan lupa masukin ke `.gitignore`
+Kalau buat script (.bat , .sh , dkk), jangan lupa masukin ke `.gitignore`   
+Untuk db sementara kita pake sqlite, nanti baru ubah ke postgre/mysql
+
 # RUN
 
 buat superuser dulu kalau belum ada (buat akses /admin-panel), run
