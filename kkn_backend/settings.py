@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'data',
     'auth',
+    'api',
 
     'rest_framework',
     'corsheaders'
