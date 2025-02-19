@@ -16,3 +16,13 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+    
+
+class News(models.Model):
+    poster = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.poster.username} - {self.title}"
