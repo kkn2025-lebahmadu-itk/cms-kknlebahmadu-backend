@@ -6,9 +6,11 @@ from rest_framework import status
 from data.models import User
 from api.serializers import UserSerializer
 
+from data.permissions import SuperuserOnly
+
 
 @api_view(['POST', 'GET', 'DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([SuperuserOnly])
 def admin_views(request, id=None):
     response = {}
     if request.method == 'GET':
@@ -27,6 +29,11 @@ def admin_views(request, id=None):
                 response['message'] = f"Tidak ada id user yang diberikan"
                 return Response(response, status=status.HTTP_404_NOT_FOUND)
             user = User.objects.get(id=id)
+
+            if user.role == 'superuser':   
+                response['message'] = "Tidak bisa menghilangkan status admin superuser"
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+
             user.role = 'user'
             user.save()
 
@@ -38,11 +45,13 @@ def admin_views(request, id=None):
             return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     elif request.method == "POST":
+        print(request.user)
         try:
             if not id:
                 response['message'] = "Tidak id user yang dibreikan"
                 return Response(response, status=status.HTTP_404_NOT_FOUND)
             user = User.objects.get(id=id)
+
             user.role = "admin"
             user.save()
 
