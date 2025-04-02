@@ -63,3 +63,10 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.key} - {self.value}"
+
+class Gallery(models.Model):
+    path = models.ImageField(upload_to='gallery/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.path} - {self.created_at}"

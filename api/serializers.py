@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from data.models import User, News, Complaint, Profile
+from data.models import User, News, Complaint, Profile, Gallery
 import os
 
 class UserSerializer(serializers.ModelSerializer):
@@ -37,4 +37,9 @@ class ComplaintSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
+        fields = '__all__'
+
+class GallerySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gallery
         fields = '__all__'

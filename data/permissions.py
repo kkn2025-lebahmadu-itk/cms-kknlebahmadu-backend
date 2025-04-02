@@ -24,3 +24,10 @@ class ProfilePermissions(BasePermission):
             return True
         
         return request.user.is_authenticated and request.user.role in ['superuser', 'admin']
+
+class Gallerypermissions(BasePermission):
+    def has_permission(self, request, view):
+        if request.method == 'GET':
+            return True
+        
+        return request.user.is_authenticated and request.user.role in ['superuser', 'admin']
