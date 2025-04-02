@@ -26,3 +26,24 @@ class News(models.Model):
 
     def __str__(self):
         return f"{self.poster} - {self.title}"
+    
+
+class Complaint(models.Model):
+    class StatusChoices(models.TextChoices):
+        SELESAI = "selesai", "Selesai"
+        PROGRESS = "progress", "Dalam Progress"
+        TIDAK_VALID = "tidak_valid", "Tidak Valid"
+        SUDAH_DIBACA = "sudah_dibaca", "Sudah Dibaca"
+        PENDING = "pending", "Menunggu Konfirmasi"
+
+    user = models.CharField(max_length=50)
+    content = models.CharField(max_length=255)
+    status = models.CharField(
+        max_length=20,
+        choices=StatusChoices.choices,
+        default=StatusChoices.PENDING
+    )
+    created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.content[:10]}"
