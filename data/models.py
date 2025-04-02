@@ -25,4 +25,4 @@ class News(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.poster.username} - {self.title}"
+        return f"{self.poster} - {self.title}"
