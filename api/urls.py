@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import admin_views, news_views, complaint_views
+from .views import admin_views, news_views, complaint_views, profile_views
 
 urlpatterns = [
     # ADMIN VIEWS
@@ -22,4 +22,7 @@ urlpatterns = [
     path('complaint', complaint_views.complain_views, name='complain-views'),
     path('complaint/<int:id>', complaint_views.complain_views, name='complain-views-id'),
 
+    # PROFILE VIEWS
+    path('profile', profile_views.profile_views, name='profile-views'),
+    path('profile/<int:id>', profile_views.profile_views, name='profile-views-id'),
 ]
