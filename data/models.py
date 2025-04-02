@@ -47,3 +47,18 @@ class Complaint(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.content[:10]}"
+    
+class Profile(models.Model):
+    class TypeChoices(models.TextChoices):
+        INTI = "inti", "Informasi Inti"
+        TAMBAHAN = "tambahan", "Informasi Tambahan"
+
+    key = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+    type = models.CharField(
+        max_length=20,
+        choices=TypeChoices.choices
+    )
+
+    def __str__(self):
+        return f"{self.key} - {self.value}"
