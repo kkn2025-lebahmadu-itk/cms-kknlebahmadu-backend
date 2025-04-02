@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import admin_views, news_views, complaint_views, profile_views
+from .views import admin_views, news_views, complaint_views, profile_views, gallery_views
 
 urlpatterns = [
     # ADMIN VIEWS
@@ -25,4 +25,9 @@ urlpatterns = [
     # PROFILE VIEWS
     path('profile', profile_views.profile_views, name='profile-views'),
     path('profile/<int:id>', profile_views.profile_views, name='profile-views-id'),
+
+
+    # GALLERY VIEWS
+    path('gallery', gallery_views.gallery_views, name='gallery-views'),
+    path('gallery/<int:id>', gallery_views.gallery_views, name='gallery-views-id'),
 ]
