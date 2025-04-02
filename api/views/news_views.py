@@ -1,11 +1,12 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from data.models import User, News
 from data.permissions import AdminOnly
-from api.serializers import NewsSerializer, UserSerializer
+from api.serializers import NewsSerializer, UserSerializer, GetNewsSerializer
 
 from django.shortcuts import get_object_or_404
 
@@ -28,14 +29,18 @@ from django.shortcuts import get_object_or_404
 
 @api_view(['POST'])
 @permission_classes([AdminOnly])
+@parser_classes([MultiPartParser, FormParser])
 def create_news(request):
     response = {}
 
     data = request.data.copy()
     data['poster'] = request.user.id
+    
+    print(data)
 
     serializer = NewsSerializer(data=data, context={'request': request})
     if serializer.is_valid():
+        print(serializer.validated_data)
         news = serializer.save()
         news.poster = request.user
         news.save()
@@ -61,14 +66,14 @@ def get_news(request, id=None):
     # fetch 1 berita aja kalo ada id di url
     if id:
         news = get_object_or_404(News, id=id)
-        data = NewsSerializer(news, context={'request': request}).data
+        data = GetNewsSerializer(news, context={'request': request}).data
         response['message'] = f'Berita dengan id {id} berhasil difetch dari database'
         response['data'] = data
         return Response(response, status=status.HTTP_200_OK)
     
     # Kalo nggak ada, fetch semua berita
     all_news = News.objects.all()
-    data = NewsSerializer(all_news, many=True, context={'request': request}).data
+    data = GetNewsSerializer(all_news, many=True, context={'request': request}).data
     response['message'] = f'Semua berita berhasil difetch dari database'
     response['data'] = data
     return Response(response, status=status.HTTP_200_OK)

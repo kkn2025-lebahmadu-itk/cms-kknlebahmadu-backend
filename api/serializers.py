@@ -12,7 +12,22 @@ class NewsSerializer(serializers.ModelSerializer):
     poster = UserSerializer(read_only=True)
     class Meta:
         model = News
-        fields = ['id', 'poster', 'title', 'content', 'created_at']
+        # fields = ['id', 'poster', 'title', 'content', 'created_at']
+        fields = '__all__'
+
+
+class GetNewsSerializer(serializers.ModelSerializer):
+    thumbnail_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = News
+        fields = ['id', 'title', 'content', 'poster', 'thumbnail_url', 'created_at']
+
+    def get_thumbnail_url(self, obj):
+        request = self.context.get('request')
+        if obj.thumbnail:
+            return request.build_absolute_uri(obj.thumbnail.url)
+        return None
 
 class ComplaintSerializer(serializers.ModelSerializer):
     class Meta:

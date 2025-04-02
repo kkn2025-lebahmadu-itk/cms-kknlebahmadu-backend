@@ -20,6 +20,7 @@ class User(AbstractUser):
 
 class News(models.Model):
     poster = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    thumbnail = models.ImageField(upload_to='thumbnail', null=True, blank=True)
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
