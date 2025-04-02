@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from data.models import User, News
+from data.models import User, News, Complaint
 import os
 
 class UserSerializer(serializers.ModelSerializer):
@@ -16,5 +16,5 @@ class NewsSerializer(serializers.ModelSerializer):
 
 class ComplaintSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Complaint
         fields = ['id', 'user', 'content', 'status', 'created_at']
