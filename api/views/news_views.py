@@ -10,31 +10,31 @@ from data.permissions import NewsPermissions
 
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from django.utils.text import slugify
 
 import os
-
-
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes([NewsPermissions])
 @parser_classes([MultiPartParser, FormParser])
-def news_views(request, id=None):
+def news_views(request, slug=None):
     response = {}
 
     if request.method == 'POST':
         data = request.data.copy()
         data['poster'] = request.user.id
+        data['slug'] = slugify(data['title'])
         
         serializer = NewsSerializer(data=data, context={'request': request})
         if serializer.is_valid():
-            print(serializer.validated_data)
             news = serializer.save()
             news.poster = request.user
             news.save()
             response['message'] = 'Berita baru sudah berhasil terbuat'
             response['data'] = {
                 'title': news.title,
+                'slug': news.slug,
                 'content': news.content,
                 'poster': news.poster.username
             }
@@ -45,31 +45,36 @@ def news_views(request, id=None):
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'GET':
-        if id:
-            news = get_object_or_404(News, id=id)
+        if slug:
+            news = get_object_or_404(News, slug=slug)
             data = GetNewsSerializer(news, context={'request': request}).data
-            response['message'] = f'Berita dengan id {id} berhasil difetch dari database'
+            response['message'] = f'Berita dengan slug "{slug}" berhasil difetch dari database'
             response['data'] = data
             return Response(response, status=status.HTTP_200_OK)
         
-        # Kalo nggak ada, fetch semua berita
         all_news = News.objects.all()
         data = GetNewsSerializer(all_news, many=True, context={'request': request}).data
-        response['message'] = f'Semua berita berhasil difetch dari database'
+        response['message'] = 'Semua berita berhasil difetch dari database'
         response['data'] = data
         return Response(response, status=status.HTTP_200_OK)
 
     elif request.method == 'PUT':
+        news = get_object_or_404(News, slug=slug)
         data = request.data
-        news = get_object_or_404(News, id=id)
+
         if 'thumbnail' in data and news.thumbnail:
             old_image_path = os.path.join(settings.MEDIA_ROOT, str(news.thumbnail))
             if os.path.exists(old_image_path):
                 os.remove(old_image_path)
-        serializer = NewsSerializer(news, data=data)
+
+        # Update slug if title changes
+        if 'title' in data and data['title'] != news.title:
+            data['slug'] = slugify(data['title'])
+
+        serializer = NewsSerializer(news, data=data, partial=True)
         if serializer.is_valid():
             news = serializer.save()
-            response['message'] = f'Berita dengan id {id} berhasil diupdate'
+            response['message'] = f'Berita dengan slug "{slug}" berhasil diupdate'
             response['data'] = NewsSerializer(news).data
             return Response(response, status=status.HTTP_200_OK)
         else:
@@ -79,14 +84,13 @@ def news_views(request, id=None):
         
 
     elif request.method == 'DELETE':
-        news = get_object_or_404(News, id=id)
+        news = get_object_or_404(News, slug=slug)
+
         if news.thumbnail:
             image_path = os.path.join(settings.MEDIA_ROOT, str(news.thumbnail))
             if os.path.exists(image_path):
                 os.remove(image_path)
+
         news.delete()
-
-        response['messae'] = f'Berita dengan id {id} berhasil dihapus'
-        
+        response['message'] = f'Berita dengan slug "{slug}" berhasil dihapus'
         return Response(response, status=status.HTTP_204_NO_CONTENT)
-
