@@ -8,6 +8,8 @@ from data.permissions import Gallerypermissions
 from api.serializers import GallerySerializer, NewsSerializer
 
 from django.shortcuts import get_object_or_404
+from django.conf import settings
+import os
 
 @api_view(['POST', 'GET', 'DELETE'])
 @permission_classes([Gallerypermissions])
@@ -46,6 +48,10 @@ def gallery_views(request, id=None):
     
     elif request.method == 'DELETE':
         data = get_object_or_404(Gallery, id=id)
+        if data.path:
+            image_path = os.path.join(settings.MEDIA_ROOT, str(data.path))
+            if os.path.exists(image_path):
+                os.remove(image_path)
         data.delete()
 
         response['message'] = 'Berhasil menghapus gambar dari galeri'
