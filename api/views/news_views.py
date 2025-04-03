@@ -69,10 +69,6 @@ def news_views(request, slug=None):
             if os.path.exists(old_image_path):
                 os.remove(old_image_path)
 
-        # Update slug if title changes
-        if 'title' in data and data['title'] != news.title:
-            data['slug'] = slugify(data['title'])
-
         serializer = NewsSerializer(news, data=data, partial=True)
         if serializer.is_valid():
             news = serializer.save()

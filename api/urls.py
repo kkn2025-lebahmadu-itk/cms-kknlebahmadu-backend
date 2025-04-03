@@ -9,12 +9,7 @@ urlpatterns = [
     # NEWS VIEWS
     # TODO : Create the better urls
     path('news', news_views.news_views, name="news-views"),
-    path('news/<int:id>', news_views.news_views, name="news-views-id"),
-    # path('create-news', news_views.create_news, name="create-news"), #create news.
-    # path('get-news', news_views.get_news, name="news-views"), # get all news
-    # path('get-news/<int:id>', news_views.get_news, name="news-views-id"), # get single news
-    # path('update-news/<int:id>', news_views.update_news, name='update-news'), # update news.
-    # path('delete-news/<int:id>', news_views.delete_news, name='delete-news'), # delete news.
+    path('news/<slug:slug>', news_views.news_views, name="news-views-id"),
 
 
     
