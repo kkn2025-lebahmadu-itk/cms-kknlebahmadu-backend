@@ -30,6 +30,8 @@ def news_views(request, slug=None):
         if serializer.is_valid():
             news = serializer.save()
             news.poster = request.user
+            slug = f"{slugify(news.title)}-{news.id}"
+            news.slug = slug
             news.save()
             response['message'] = 'Berita baru sudah berhasil terbuat'
             response['data'] = {
