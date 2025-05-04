@@ -71,3 +71,11 @@ class Gallery(models.Model):
 
     def __str__(self):
         return f"{self.path} - {self.created_at}"
+    
+
+class Report(models.Model):
+    path = models.ImageField(upload_to='report/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.path} - {self.created_at}"
