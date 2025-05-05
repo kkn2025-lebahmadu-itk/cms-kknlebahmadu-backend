@@ -3,6 +3,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.pagination import PageNumberPagination
 
 from data.models import User, News
 from api.serializers import NewsSerializer, UserSerializer, GetNewsSerializer
@@ -11,6 +12,7 @@ from data.permissions import NewsPermissions
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.utils.text import slugify
+
 
 import os
 
@@ -55,10 +57,14 @@ def news_views(request, slug=None):
             return Response(response, status=status.HTTP_200_OK)
         
         all_news = News.objects.all()
-        data = GetNewsSerializer(all_news, many=True, context={'request': request}).data
-        response['message'] = 'Semua berita berhasil difetch dari database'
-        response['data'] = data
-        return Response(response, status=status.HTTP_200_OK)
+        paginator = PageNumberPagination()
+        paginator.page_size = 3
+        result_page = paginator.paginate_queryset(all_news, request)
+        data = GetNewsSerializer(result_page, many=True, context={'request': request}).data
+        return paginator.get_paginated_response({
+            'message': 'Semua berita berhasil difetch dari database',
+            'data': data
+        })
 
     elif request.method == 'PUT':
         news = get_object_or_404(News, slug=slug)
