@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from data.models import User, News, Complaint, Profile, Gallery
+from data.models import User, News, Complaint, Profile, Gallery, Report
 import os
 
 class UserSerializer(serializers.ModelSerializer):
@@ -43,3 +43,13 @@ class GallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gallery
         fields = '__all__'
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = "__all__"
+        
+    def validate_pdf(self, value):
+        if not value.name.lower().endswith('.pdf'):
+            raise serializers.ValidationError("Only PDF files are allowed.")
+        return value

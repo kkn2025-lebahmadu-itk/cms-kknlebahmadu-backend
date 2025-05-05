@@ -74,7 +74,7 @@ class Gallery(models.Model):
     
 
 class Report(models.Model):
-    path = models.ImageField(upload_to='report/', null=True, blank=True)
+    pdf = models.FileField(upload_to='report/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
