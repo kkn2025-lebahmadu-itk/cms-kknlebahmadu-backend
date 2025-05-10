@@ -21,7 +21,7 @@ class GetNewsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = News
-        fields = ['id', 'title', 'content', 'poster', 'thumbnail_url', 'created_at']
+        fields = ['id','slug', 'title', 'content', 'poster', 'thumbnail_url', 'created_at']
 
     def get_thumbnail_url(self, obj):
         request = self.context.get('request')
