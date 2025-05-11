@@ -46,3 +46,10 @@ class ReportPermissions(BasePermission):
             return True
         
         return request.user.is_authenticated and request.user.role in ['superuser', 'admin']
+
+class RecapPermissions(BasePermission):
+    def has_permission(self, request, view):
+        # if request.method == 'POST':
+        #     return True
+        
+        return request.user.is_authenticated and request.user.role in ['superuser', 'admin']

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from data.models import User, News, Complaint, Profile, Gallery, Report
+from data.models import User, News, Complaint, Profile, Gallery, Report, LetterRecap
 import os
 
 class UserSerializer(serializers.ModelSerializer):
@@ -53,3 +53,8 @@ class ReportSerializer(serializers.ModelSerializer):
         if not value.name.lower().endswith('.pdf'):
             raise serializers.ValidationError("Only PDF files are allowed.")
         return value
+    
+class LetterRecapSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LetterRecap
+        fields = "__all__"
