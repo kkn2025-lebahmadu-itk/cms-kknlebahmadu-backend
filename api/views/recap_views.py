@@ -13,7 +13,7 @@ from data.permissions import RecapPermissions
 def recap_views(request, id=None):
     response = {}
     if request.method == 'GET':
-        all_recaps = LetterRecapSerializer(LetterRecap.objects.all(), many=True, context={'request': request}).data
+        all_recaps = LetterRecapSerializer(LetterRecap.objects.order_by('-tanggal_surat'), many=True, context={'request': request}).data
 
         response['recaps'] = all_recaps
 
