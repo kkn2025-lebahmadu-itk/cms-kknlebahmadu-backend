@@ -75,6 +75,7 @@ class Gallery(models.Model):
 
 class Report(models.Model):
     pdf = models.FileField(upload_to='report/', null=True, blank=True)
+    kategori = models.CharField(max_length=30, null=True, blank=True)
     is_signed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
 
